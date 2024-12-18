@@ -9,3 +9,6 @@ def print_score(**kwargs):
         print(scoreboard)
     else:
         return scoreboard
+
+    class player:
+     def_init_(self name)    
