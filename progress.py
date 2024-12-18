@@ -1,3 +1,7 @@
+import datetime
+from board import print_board
+from score import print_score
+
 def save_record():
     x = datetime.datetime.now()
 

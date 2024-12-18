@@ -1,4 +1,6 @@
-def print_board(ar_ray, **kwargs):
+from variables import ar_ray
+
+def print_board(**kwargs):
     # this loop prevents unwanted spaces from being added to the board after a player's move
     for i in range(len(ar_ray)):
             # the current ar_ray element should initially be interpretted as an integer

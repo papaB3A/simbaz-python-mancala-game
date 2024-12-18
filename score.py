@@ -1,3 +1,5 @@
+from variables import ar_ray
+
 def print_score(**kwargs):
     player_1_score= 0
     for index in range(7):
@@ -10,5 +12,5 @@ def print_score(**kwargs):
     else:
         return scoreboard
 
-    class player:
-     def_init_(self name)    
+    # class player:
+    #  def_init_(self name)    
