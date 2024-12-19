@@ -3,10 +3,7 @@ from progress import save_record
 from score import print_score
 from board import print_board
 from variables import option, player_onez_turn, ar_ray
-
-# array of beads in each mancala and pit
-ar_ray = [4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 0]
-player_onez_turn = True
+import random  # for computer move
 
 # custom switch case structure
 def switch_case(case):
@@ -86,35 +83,42 @@ def default():
 # helper function
 def add_beads_to_consecutive_pits(current_index):
     bead_count = int(ar_ray[current_index])
-    ar_ray[current_index] = 0 
+    ar_ray[current_index] = 0
     for consecutive_index in range(1, (bead_count + 1)):
         target_index = (current_index + consecutive_index) % len(ar_ray)
         ar_ray[target_index] = int(ar_ray[target_index]) + 1
 
-def computer_move():
-    for i in range(6):  # Check pits A-F
-        if ar_ray[i] > 0:  # If the pit is non-empty
-            print(f"Computer chooses pit {chr(i + ord('a'))}...")
-            switch_case(chr(i + ord('a')))
-            break
+def computer_turn():
+    print("\nComputer's turn...")
+    # Convert elements to integers for comparison
+    valid_moves = [i for i in range(7, 13) if int(ar_ray[i]) > 0]
+    if not valid_moves:
+        print("Computer has no valid moves!")
+        return
+    selected_move = random.choice(valid_moves)
+    print(f"Computer selects pit {chr(selected_move - 7 + ord('g'))}")
+    add_beads_to_consecutive_pits(selected_move)
 
-# Game setup: Choose mode
-game_mode = input("Choose game mode: (1) One Player (2) Two Players: ").strip()
-if game_mode not in ['1', '2']:
-    raise ValueError("Invalid game mode selected. Please choose '1' or '2'.")
+# Game setup
+mode = ""
+while mode not in ("1", "2"):
+    mode = input("Choose mode: 1 for Two Players, 2 to Play Against Computer: ")
+    if mode not in ("1", "2"):
+        print("Invalid input! Enter 1 or 2.")
 
-# player's turn switched in each loop 
-while option != "q":
+against_computer = mode == "2"
+
+# Game loop
+while not (option == "q"):
     try:
         if player_onez_turn:
             print("\nPlayer One's turn...")
             player = ["A-F", "Player 1"]
         else:
-            if game_mode == '1':
-                print("\nComputer's turn...")
-                computer_move()
+            if against_computer:
+                computer_turn()
                 player_onez_turn = not player_onez_turn
-                continue  # Skip to the next loop iteration
+                continue
             else:
                 print("\nPlayer Two's turn...")
                 player = ["G-L", "Player 2"]
@@ -125,18 +129,17 @@ while option != "q":
         if not option.isalpha():
             raise ValueError("Please enter an alphabetic letter!!")
 
-        # if player_onez_turn & option entered is not in the tuple (a,b,c,d,e,f,q)
-        if player_onez_turn and option not in ("a", "b", "c", "d", "e", "f", "q"):
+        if (player_onez_turn) and (option not in ("a", "b", "c", "d", "e", "f", "q")):
             raise ValueError(f"Please enter a move from {player[0]} (or 'q' to QUIT)")
-        elif not player_onez_turn and option not in ("g", "h", "i", "j", "k", "l", "q"):
+        elif not (player_onez_turn) and (option not in ("g", "h", "i", "j", "k", "l", "q")):
             raise ValueError(f"Please enter a move from {player[0]} (or 'q' to QUIT)")
-        elif player_onez_turn and option in ("a", "b", "c", "d", "e", "f"):
+        elif player_onez_turn and (option in ("a", "b", "c", "d", "e", "f")):
             pit_index = ord(option) - ord('a')
             if int(ar_ray[pit_index]) == 0:
                 raise ValueError("You can't pick an empty pit! Please choose a pit with beads.")
             else:
                 switch_case(option)
-        elif not player_onez_turn and option in ("g", "h", "i", "j", "k", "l"):
+        elif not (player_onez_turn) and (option in ("g", "h", "i", "j", "k", "l")):
             pit_index = ord(option) - ord('g') + 7
             if int(ar_ray[pit_index]) == 0:
                 raise ValueError("You can't pick an empty pit! Please choose a pit with beads.")
@@ -145,17 +148,15 @@ while option != "q":
         elif option == "q":
             switch_case(option)
 
-        # check if either of the players' pits are all empty...if so print the re-rendered board and end game
-        if player_onez_turn and all(int(ar_ray[i]) == 0 for i in range(6)):
+        if (player_onez_turn) and all(int(ar_ray[i]) == 0 for i in range(6)):
             print_board(print_board=True)
             end_game()
             break
-        elif not player_onez_turn and all(int(ar_ray[i]) == 0 for i in range(7, 13)):
+        elif not (player_onez_turn) and all(int(ar_ray[i]) == 0 for i in range(7, 13)):
             print_board(print_board=True)
             end_game()
             break
 
-        # switch player's turn at the end
         player_onez_turn = not player_onez_turn
     except ValueError as e:
         print(f"Error: {e}\n")
