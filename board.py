@@ -12,7 +12,7 @@ def print_board(**kwargs):
                 ar_ray[i]= str(ar_ray[i])
         
     board = (
-        "\n+------+------+-<<<<<Player 2------+------+------+------+\n"
+        "\n+------+------+-<<<<<-Player 2------+------+------+------+\n"
         "|      |L     |K     |J     |I     |H     |G     |      |\n"
         f"|      |  {ar_ray[12]}  |  {ar_ray[11]}  |  {ar_ray[10]}  |  {ar_ray[9]}  |  {ar_ray[8]}  |  {ar_ray[7]}  |      |\n"
         "|      |      |      |      |      |      |      |      |\n"
